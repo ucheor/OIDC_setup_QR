@@ -1,0 +1,32 @@
+name: OIDC AWS S3 Test
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  list-s3:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials using OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          role-session-name: OIDC_check_S3-${{ github.run_number }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Verify identity
+        run: aws sts get-caller-identity
+
+      - name: List S3 buckets
+        run: aws s3 ls
