@@ -22,6 +22,8 @@ With OIDC, your pipeline requests temporary credentials from AWS via a trusted i
 
 Go to AWS IAM → Identity providers → Add provider.
 
+---
+
 ![create identity provider](images/create_identity_provider.png)
 
 ---
@@ -38,6 +40,8 @@ Enter the Audience, typically sts.amazonaws.com.
 
 This establishes a trust relationship between AWS and your CI provider.
 
+---
+
 ![add identity provider](images/add_identity_provider.png)
 
 ---
@@ -50,17 +54,31 @@ This establishes a trust relationship between AWS and your CI provider.
 
 While on AWS IAM → Roles → Create Role.
 
+---
+
 ![create role](images/create_role.png)
+
+---
 
 Choose Web identity as the trusted entity type. Select the OIDC identity provider you created. From the dropdown, selete "sts.amazon.aws.com as the Audience. In our example using GitHub as our repository, you will need to provide the GitHub organization name. Setting up the repository name and branch name while optional, offers more control and makes it easier to trace and audit access to your AWS account. 
 
+---
+
 ![select trusted entity](images/select_trusted_entity.png)
+
+---
 
 Attach permission policies to your role. In this example, we will give a **AmazonS3ReadOnlyAccess** permission to enable us deploy a workflow from GitHub and view a list of our S3 buckets using OIDC. 
 
+---
+
 ![s3 read only access](images/s3_read_only_access.png)
 
+---
+
 Click Next to name and review our selected trusted entities and permissions policy summary for the role. Remember to add a description explanating the purpose of the role. 
+
+---
 
 ![role summary](images/role_summary.png)
 
@@ -115,13 +133,19 @@ jobs:
         run: aws s3 ls
 ```
 
+---
+
 ![create_github_action_yaml](images/create_github_action_yaml.png)
 
 ---
 
 Secrets are encrypted values accessible only to GitHub Actions workflows. They are ideal for sensitive credentials. Go to your GitHub repository → Settings → Secrets and variables → Actions → New repository secret. Set up a secret for AWS_ROLE_TO_ASSUME and add the arn for the role we set up earlier on AWS IAM. Using secrets helps avoid hardcoding secrets or credentials in workflow YAML files. This way, we can combine secrets with OIDC for maximum security — your pipeline can assume AWS roles without ever storing keys.
 
+---
+
 ![secrets and variables](images/secrets_and_variables.png)
+
+---
 
 Variables store non-sensitive configuration values that you might want to reference in multiple workflows, such as environment names, region names, or feature flags. Go ahead and do the same for the variable and set up your AWS_REGION as a variable. 
 
@@ -130,6 +154,8 @@ Variables store non-sensitive configuration values that you might want to refere
 **Step 4:** Test & Audit
 
 Trigger your pipeline and verify the role is assumed. We should be able to view all S3 buckets in the region specified. If you do not have an existing bucket, you can of course create one and watch the GitHub Action pipeline console to see it listed if everything is set up correctly. Make sure no static keys are stored in your CI/CD environment.
+
+---
 
 ![OIDC active](images/OIDC_active.png)
 
@@ -150,5 +176,7 @@ Trigger your pipeline and verify the role is assumed. We should be able to view 
 - Reduced risk: even if your CI system is compromised, attackers cannot use long-lived keys.
 
 **Bottom line:** Using OIDC with AWS IAM is a safe way to authenticate your CI/CD pipelines. It eliminates risky secrets, provides temporary credentials on-demand, and ensures you follow security best practices for cloud deployments.
+
+---
 
 *Let me know if you have any questions or insights! Feel free to connect!*
