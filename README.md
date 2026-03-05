@@ -1,7 +1,5 @@
 # Securing CI/CD Pipelines with OpenID Connect (OIDC) in AWS IAM
 
-*GitHub Repository - *https://github.com/ucheor/OIDC_setup_QR.git*
-
 Securing your CI/CD pipelines should not be optional — it is essential. Long-lived AWS access keys are risky: if they leak, they can compromise your entire cloud environment. The gold standard solution? OpenID Connect (OIDC) with AWS IAM, which enables your pipeline to assume roles dynamically, without storing static credentials.
 
 **Why OIDC Matters for CI/CD**
@@ -14,9 +12,12 @@ Key rotation overhead – keeping secrets up to date adds operational burden.
 
 With OIDC, your pipeline requests temporary credentials from AWS via a trusted identity provider (e.g., GitHub or GitLab). The credentials expire automatically, and no secrets are stored in your repo or CI environment. Here’s a practical, step-by-step guide to set it up.
 
----
+*GitHub Repository - *https://github.com/ucheor/OIDC_setup_QR.git*
+
 
 **Step-by-Step: Setting up OIDC in AWS IAM**
+
+---
 
 **Step 1:** Configure an OIDC Identity Provider in AWS
 
@@ -170,8 +171,6 @@ Trigger your pipeline and verify the role is assumed. We should be able to view 
 - No static secrets: credentials are temporary and automatically expire.
 
 - Fine-grained access: roles can be scoped per repository, branch, or workflow.
-
-- Audit-friendly: all access is logged in CloudTrail.
 
 - Reduced risk: even if your CI system is compromised, attackers cannot use long-lived keys.
 
